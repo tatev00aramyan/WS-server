@@ -78,8 +78,8 @@ def calc_nutation_in_longitude(t: float, sun_mean_long: float,
     moon_mean_long = radians(moon_mean_long)
     omega = 125.04452 - 1934.136261*t + 0.0020708*t*t + (t**3)/450000
     omega = radians(omega)
-    delta_psi = -0.004777778*sin(omega) + 0.0003666667*sin(2*sun_mean_long) \
-        - 0.00006388889*sin(2*moon_mean_long) + 0.00005833333*sin(2*omega)
+    delta_psi = (-17.2/3600)*sin(omega) + (1.32/3600)*sin(2*sun_mean_long) \
+        - (0.23/3600)*sin(2*moon_mean_long) + (0.21/3600)*sin(2*omega)
 
     return delta_psi
 
@@ -89,30 +89,13 @@ def calc_nutation_in_obliquity(t: float, sun_mean_long: float,
     sun_mean_long = radians(sun_mean_long)
     moon_mean_long = radians(moon_mean_long)
     omega = radians(125.04452 - 1934.136261*t + 0.0020708*t*t + (t**3)/450000)
-    delta_epsilon = 0.002555556*cos(omega) + 0.0001583333*cos(2*sun_mean_long)\
-        - 0.00002777778*cos(2*moon_mean_long) - 0.000025*cos(2*omega)
+    delta_epsilon = (9.2/3600)*cos(omega) + (0.57/3600)*cos(2*sun_mean_long)\
+        + (0.1/3600)*cos(2*moon_mean_long) - (0.09/3600)*cos(2*omega)
     epsilon0 = 23.4392911 - 0.0130041667 * t - (0.00059/3600) * (t ** 2) \
         + (0.001813/3600) * (t ** 3)  # 0.00000163888889
     epsilon = delta_epsilon + epsilon0
 
     return epsilon
-
-
-def calc_ra_dec(ecliptic_longitude: float,
-                ecliptic_latitude: float,
-                epsilon: float) -> tuple:
-
-    e_long = radians(ecliptic_longitude)
-    e_lat = radians(ecliptic_latitude)
-    epsilon = radians(epsilon)
-    ra = degrees(atan(
-        (sin(e_long)*cos(epsilon) - tan(e_lat)*sin(epsilon))/cos(e_long)
-        ))
-    dec = degrees(asin(
-        sin(e_lat)*cos(epsilon) + cos(e_lat)*sin(epsilon)*sin(e_long)
-            ))
-
-    return ra, dec
 
 
 def calc_periodic_terms_sum(coefficient_lst: list,
@@ -139,6 +122,15 @@ def calc_periodic_terms_sum(coefficient_lst: list,
     return suum
 
 
+def calc_ecliptic_longitude(mean_longitude: float, sum_longitude: float
+                            ) -> float:
+    return angle_in_360(mean_longitude + sum_longitude/1000000)
+
+
+def calc_ecliptic_latitude(sum_latitude: float) -> float:
+    return sum_latitude/1000000
+
+
 def calc_adds_to_eclp_lat(mean_longitude: float,
                           moon_anomaly: float,
                           dist_asc_node, a1, a3) -> float:
@@ -161,20 +153,28 @@ def calc_adds_to_eclp_long(mean_longitude: float,
     return 3958*sin(a1) + 1962*sin(longitude-f) + 318*sin(a2)
 
 
-def calc_ecliptic_longitude(mean_longitude: float, sum_longitude: float
-                            ) -> float:
-    return angle_in_360(mean_longitude + sum_longitude/1000000)
+def calc_ra_dec(ecliptic_longitude: float,
+                ecliptic_latitude: float,
+                epsilon: float) -> tuple:
 
+    e_long = radians(ecliptic_longitude)
+    e_lat = radians(ecliptic_latitude)
+    epsilon = radians(epsilon)
+    ra = degrees(atan(
+        (sin(e_long)*cos(epsilon) - tan(e_lat)*sin(epsilon))/cos(e_long)
+        ))
+    dec = degrees(asin(
+        sin(e_lat)*cos(epsilon) + cos(e_lat)*sin(epsilon)*sin(e_long)
+            ))
 
-def calc_ecliptic_latitude(sum_latitude: float) -> float:
-    return sum_latitude/1000000
+    return ra, dec
 
 
 def format_ra(deg: float) -> str:
     h = int(deg//15)
     m = (deg/15 - h) * 60
     s = (m - int(m)) * 60
-    return f"{abs(h)}h, {int(m)}m, {s:.2f}s"
+    return f"{h}h, {int(m)}m, {s:.2f}s"
 
 
 def format_dec(deg: float) -> str:
@@ -182,3 +182,15 @@ def format_dec(deg: float) -> str:
     minutes = (deg - degree) * 60
     sec = (minutes - int(minutes)) * 60
     return f"{degree}deg {int(minutes)}m {sec:.2f}s"
+
+
+def adjust_ra_borders(ra: float):
+    if ra > 360:
+        ra = ra - (ra//360)*360
+
+    if ra < 0:
+        ra = abs(ra)
+        ra = ra - (ra//180)*180
+        ra = 180 - ra
+
+    return ra

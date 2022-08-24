@@ -55,4 +55,4 @@ def run():
     ecliptic_long += delta_psi
     ra, dec = clc.calc_ra_dec(ecliptic_long, ecliptic_lat, epsilon)
 
-    return clc.format_ra(ra), clc.format_dec(dec)
+    return clc.format_ra(clc.adjust_ra_borders(ra)), clc.format_dec(dec)
