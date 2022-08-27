@@ -1,3 +1,8 @@
+"""     One_letter comments matches to variables
+        in James Meeus 'Astronomical algorithms'
+        for comparing and readability   """
+
+
 import calculations as clc
 from periodics import longitude_periodic_coef, longitude_periodic_arguments,\
                 latitude_periodic_coef, latitude_periodic_arguments
@@ -7,8 +12,8 @@ def get_needed_values():
     julian_date = clc.date_to_j_day()
     t = clc.calc_j_time_centuries(julian_date)  # T
     mean_elongation = clc.calc_moon_elongation(t)    # D
-    sun_anomaly = clc.calc_sun_anomaly(t)  # Ms
-    moon_anomaly = clc.calc_moon_anomaly(t)  # M'm
+    sun_anomaly = clc.calc_sun_anomaly(t)  # M
+    moon_anomaly = clc.calc_moon_anomaly(t)  # M'
     dist_from_asc_node = clc.calc_dist_from_asc_node(t)  # F
     sun_mean_long = clc.calc_sun_mean_longitude(t)  # L
     moon_mean_long = clc.calc_moon_mean_longitude(t)  # L'

@@ -12,7 +12,7 @@ async def handler(websocket):
             ra_dec = f"RA: {ra}, DEC:{dec}"
             await websocket.send(ra_dec)
             print(ra_dec)
-            await asyncio.sleep(3)
+            await asyncio.sleep(10)
     except websockets.ConnectionClosed:
         print("A client just disconnected")
 

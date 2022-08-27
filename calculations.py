@@ -11,55 +11,55 @@ def angle_in_360(x: float) -> float:
 def date_to_j_day() -> float:
     day = timedelta(1)
     julian_epoch = datetime(2000, 1, 1, 12)
-    j2000_jd = timedelta(2451545)  # julian epoch in julian dates
+    j2000_jd = timedelta(2451545)
     dt = datetime.now()
 
-    h = dt.hour  # for Universal time. we are GT+4 zone
-    julian_day = (dt.replace(hour=h-4) - julian_epoch + j2000_jd) / day
+    h = dt.hour - 4  # for Universal time. We are in GT+4 zone
+    julian_day = (dt.replace(hour=h) - julian_epoch + j2000_jd) / day
 
     return julian_day
 
 
-def calc_j_time_centuries(julian_date: float) -> float:  # T
+def calc_j_time_centuries(julian_date: float) -> float:
     return (julian_date - 2451545.0)/36525
 
 
-def calc_moon_mean_longitude(t: float) -> float:  # L moon
+def calc_moon_mean_longitude(t: float) -> float:
     mean_long = 218.3164477 + 481267.88123421*t - 0.0015786*(t**2) \
                 + (t**3)/538841 - (t**4)/65194000
     return angle_in_360(mean_long)
 
 
-def calc_sun_mean_longitude(t: float) -> float:  # L sun
+def calc_sun_mean_longitude(t: float) -> float:
     mean_long = 280.46646 + 36000.76983*t + 0.0003032*t*t
     return angle_in_360(mean_long)
 
 
-def calc_moon_elongation(t: float) -> float:  # D
+def calc_moon_elongation(t: float) -> float:
     moon_elongation = 297.8501921 + 445267.1114034*t - 0.0018819*(t**2) \
         + (t**3)/545868 - (t**4)/11306500
     return angle_in_360(moon_elongation)
 
 
-def calc_sun_anomaly(t: float) -> float:   # M
+def calc_sun_anomaly(t: float) -> float:
     sun_anomaly = 357.5291092 + 35999.0502909*t - 0.0001536*(t**2) \
                 + (t**3)/24490000
     return angle_in_360(sun_anomaly)
 
 
-def calc_moon_anomaly(t: float) -> float:  # M'
+def calc_moon_anomaly(t: float) -> float:
     moon_anomaly = 134.9633964 + 477198.8675055*t \
                     + 0.0087414*(t**2) + (t**3)/69699 - (t**4)/14712000
     return angle_in_360(moon_anomaly)
 
 
-def calc_dist_from_asc_node(t: float) -> float:  # F
+def calc_dist_from_asc_node(t: float) -> float:
     dist_asc_node = 93.2720950 + 483202.0175233*t - 0.0036539*(t**2)\
                     - (t**3)/3526000 + (t**4)/863310000
     return angle_in_360(dist_asc_node)
 
 
-def calc_arguments(t: float) -> tuple:  # A
+def calc_arguments(t: float) -> tuple:
     a1 = angle_in_360(119.75 + 131.849*t)
     a2 = angle_in_360(53.09 + 479264.290*t)
     a3 = angle_in_360(313.45 + 481266.484*t)
@@ -67,7 +67,7 @@ def calc_arguments(t: float) -> tuple:  # A
     return angle_in_360(a1), angle_in_360(a2), angle_in_360(a3)
 
 
-def calc_effect_by_sun(t: float) -> float:   # E
+def calc_effect_by_sun(t: float) -> float:
     effect_by_sun = 1 - 0.002516*t - 0.0000074*(t**2)
     return effect_by_sun
 
@@ -92,7 +92,7 @@ def calc_nutation_in_obliquity(t: float, sun_mean_long: float,
     delta_epsilon = (9.2/3600)*cos(omega) + (0.57/3600)*cos(2*sun_mean_long)\
         + (0.1/3600)*cos(2*moon_mean_long) - (0.09/3600)*cos(2*omega)
     epsilon0 = 23.4392911 - 0.0130041667 * t - (0.00059/3600) * (t ** 2) \
-        + (0.001813/3600) * (t ** 3)  # 0.00000163888889
+        + (0.001813/3600) * (t ** 3)
     epsilon = delta_epsilon + epsilon0
 
     return epsilon
@@ -174,7 +174,7 @@ def format_ra(deg: float) -> str:
     h = int(deg//15)
     m = (deg/15 - h) * 60
     s = (m - int(m)) * 60
-    return f"{h}h, {int(m)}m, {s:.2f}s"
+    return f"{h}h {int(m)}m {s:.2f}s"
 
 
 def format_dec(deg: float) -> str:
