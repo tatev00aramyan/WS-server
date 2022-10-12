@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from math import *
 
 
-def angle_in_360(x: float) -> float:
+def is_angle_in_360(x: float) -> float:
     if 0 <= x <= 360:
         return x
     return x-(360*(x//360))
@@ -27,44 +27,44 @@ def calc_j_time_centuries(julian_date: float) -> float:
 def calc_moon_mean_longitude(t: float) -> float:
     mean_long = 218.3164477 + 481267.88123421*t - 0.0015786*(t**2) \
                 + (t**3)/538841 - (t**4)/65194000
-    return angle_in_360(mean_long)
+    return is_angle_in_360(mean_long)
 
 
 def calc_sun_mean_longitude(t: float) -> float:
     mean_long = 280.46646 + 36000.76983*t + 0.0003032*t*t
-    return angle_in_360(mean_long)
+    return is_angle_in_360(mean_long)
 
 
 def calc_moon_elongation(t: float) -> float:
     moon_elongation = 297.8501921 + 445267.1114034*t - 0.0018819*(t**2) \
         + (t**3)/545868 - (t**4)/11306500
-    return angle_in_360(moon_elongation)
+    return is_angle_in_360(moon_elongation)
 
 
 def calc_sun_anomaly(t: float) -> float:
     sun_anomaly = 357.5291092 + 35999.0502909*t - 0.0001536*(t**2) \
                 + (t**3)/24490000
-    return angle_in_360(sun_anomaly)
+    return is_angle_in_360(sun_anomaly)
 
 
 def calc_moon_anomaly(t: float) -> float:
     moon_anomaly = 134.9633964 + 477198.8675055*t \
                     + 0.0087414*(t**2) + (t**3)/69699 - (t**4)/14712000
-    return angle_in_360(moon_anomaly)
+    return is_angle_in_360(moon_anomaly)
 
 
 def calc_dist_from_asc_node(t: float) -> float:
     dist_asc_node = 93.2720950 + 483202.0175233*t - 0.0036539*(t**2)\
                     - (t**3)/3526000 + (t**4)/863310000
-    return angle_in_360(dist_asc_node)
+    return is_angle_in_360(dist_asc_node)
 
 
 def calc_arguments(t: float) -> tuple:
-    a1 = angle_in_360(119.75 + 131.849*t)
-    a2 = angle_in_360(53.09 + 479264.290*t)
-    a3 = angle_in_360(313.45 + 481266.484*t)
+    a1 = is_angle_in_360(119.75 + 131.849*t)
+    a2 = is_angle_in_360(53.09 + 479264.290*t)
+    a3 = is_angle_in_360(313.45 + 481266.484*t)
 
-    return angle_in_360(a1), angle_in_360(a2), angle_in_360(a3)
+    return is_angle_in_360(a1), is_angle_in_360(a2), is_angle_in_360(a3)
 
 
 def calc_effect_by_sun(t: float) -> float:
@@ -138,7 +138,7 @@ def calc_ecliptic_longitude(
         sum_longitude: float
 ) -> float:
 
-    return angle_in_360(mean_longitude + sum_longitude/1000000)
+    return is_angle_in_360(mean_longitude + sum_longitude/1000000)
 
 
 def calc_ecliptic_latitude(sum_latitude: float) -> float:
@@ -194,18 +194,34 @@ def calc_ra_dec(
     return ra, dec
 
 
-def format_ra(deg: float) -> str:
+def format_ra_deg_to_hour(deg: float) -> dict:
+    data_dct = {}
     h = int(deg//15)
     m = (deg/15 - h) * 60
     s = (m - int(m)) * 60
-    return f"{h}h {int(m)}m {s:.2f}s"
+    data_dct["h"] = h
+    data_dct["m"] = int(m)
+    data_dct["s"] = round(s, 2)
+    return data_dct
 
 
-def format_dec(deg: float) -> str:
+def format_dec_deg_to_hour(deg: float) -> dict:
+
+    data_dct = {}
     degree = int(deg)
     minutes = (deg - degree) * 60
-    sec = (minutes - int(minutes)) * 60
-    return f"{degree}deg {int(minutes)}m {sec:.2f}s"
+    s = (minutes - int(minutes)) * 60
+    data_dct["deg"] = degree
+    data_dct["m"] = int(minutes)
+    data_dct["s"] = round(s, 2)
+    return data_dct
+
+
+def convert_ra_dec_to_str(ra: dict, dec: dict) -> tuple:
+
+    ra_str = f"{ra['h']}h {ra['m']}m {ra['s']}s"
+    dec_str = f"{dec['deg']}deg {dec['m']}m {dec['s']}s"
+    return ra_str, dec_str
 
 
 def adjust_ra_borders(ra: float):
