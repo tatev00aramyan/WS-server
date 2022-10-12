@@ -72,8 +72,12 @@ def calc_effect_by_sun(t: float) -> float:
     return effect_by_sun
 
 
-def calc_nutation_in_longitude(t: float, sun_mean_long: float,
-                               moon_mean_long: float) -> float:
+def calc_nutation_in_longitude(
+        t: float,
+        sun_mean_long: float,
+        moon_mean_long: float
+) -> float:
+
     sun_mean_long = radians(sun_mean_long)
     moon_mean_long = radians(moon_mean_long)
     omega = 125.04452 - 1934.136261*t + 0.0020708*t*t + (t**3)/450000
@@ -84,8 +88,12 @@ def calc_nutation_in_longitude(t: float, sun_mean_long: float,
     return delta_psi
 
 
-def calc_nutation_in_obliquity(t: float, sun_mean_long: float,
-                               moon_mean_long: float) -> float:
+def calc_nutation_in_obliquity(
+        t: float,
+        sun_mean_long: float,
+        moon_mean_long: float
+) -> float:
+
     sun_mean_long = radians(sun_mean_long)
     moon_mean_long = radians(moon_mean_long)
     omega = radians(125.04452 - 1934.136261*t + 0.0020708*t*t + (t**3)/450000)
@@ -98,13 +106,16 @@ def calc_nutation_in_obliquity(t: float, sun_mean_long: float,
     return epsilon
 
 
-def calc_periodic_terms_sum(coefficient_lst: list,
-                            arg_lst: list,
-                            mean_elong: float,
-                            s_anomaly: float,
-                            m_anomaly: float,
-                            dist_asc_node: float,
-                            sun_effect: float) -> float:
+def calc_periodic_terms_sum(
+        coefficient_lst: list,
+        arg_lst: list,
+        mean_elong: float,
+        s_anomaly: float,
+        m_anomaly: float,
+        dist_asc_node: float,
+        sun_effect: float
+) -> float:
+
     idx = -1
     suum = 0
     for i in arg_lst:
@@ -122,8 +133,11 @@ def calc_periodic_terms_sum(coefficient_lst: list,
     return suum
 
 
-def calc_ecliptic_longitude(mean_longitude: float, sum_longitude: float
-                            ) -> float:
+def calc_ecliptic_longitude(
+        mean_longitude: float,
+        sum_longitude: float
+) -> float:
+
     return angle_in_360(mean_longitude + sum_longitude/1000000)
 
 
@@ -131,9 +145,14 @@ def calc_ecliptic_latitude(sum_latitude: float) -> float:
     return sum_latitude/1000000
 
 
-def calc_adds_to_eclp_lat(mean_longitude: float,
-                          moon_anomaly: float,
-                          dist_asc_node, a1, a3) -> float:
+def calc_adds_to_eclp_lat(
+        mean_longitude: float,
+        moon_anomaly: float,
+        dist_asc_node: float,
+        a1: float,
+        a3: float
+) -> float:
+
     longitude = radians(mean_longitude)
     mm = radians(moon_anomaly)
     f = radians(dist_asc_node)
@@ -143,9 +162,12 @@ def calc_adds_to_eclp_lat(mean_longitude: float,
         + 175 * sin(a1 + f) + 127 * sin(longitude - mm) - 115*sin(longitude+mm)
 
 
-def calc_adds_to_eclp_long(mean_longitude: float,
-                           dist_asc_node: float,
-                           a1: float, a2: float) -> float:
+def calc_adds_to_eclp_long(
+        mean_longitude: float,
+        dist_asc_node: float,
+        a1: float, a2: float
+) -> float:
+
     longitude = radians(mean_longitude)
     f = radians(dist_asc_node)
     a1 = radians(a1)
@@ -153,9 +175,11 @@ def calc_adds_to_eclp_long(mean_longitude: float,
     return 3958*sin(a1) + 1962*sin(longitude-f) + 318*sin(a2)
 
 
-def calc_ra_dec(ecliptic_longitude: float,
-                ecliptic_latitude: float,
-                epsilon: float) -> tuple:
+def calc_ra_dec(
+        ecliptic_longitude: float,
+        ecliptic_latitude: float,
+        epsilon: float
+) -> tuple:
 
     e_long = radians(ecliptic_longitude)
     e_lat = radians(ecliptic_latitude)
