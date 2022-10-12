@@ -1,14 +1,14 @@
 import websockets
 import asyncio
 from pyngrok import ngrok
-from ra_dec_app import run
+from ra_dec_app import calculate_moon_coordinates
 
 
 async def handler(websocket):
     print("A client just connected")
     try:
         while True:
-            ra, dec = run()
+            ra, dec = calculate_moon_coordinates()
             ra_dec = f"RA: {ra}, DEC:{dec}"
             await websocket.send(ra_dec)
             print(ra_dec)

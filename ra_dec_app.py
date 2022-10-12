@@ -8,7 +8,7 @@ from periodics import longitude_periodic_coef, longitude_periodic_arguments,\
                 latitude_periodic_coef, latitude_periodic_arguments
 
 
-def run():
+def calculate_moon_coordinates():
     julian_date = clc.date_to_j_day()
     t = clc.calc_j_time_centuries(julian_date)  # T
     mean_elongation = clc.calc_moon_elongation(t)  # D
