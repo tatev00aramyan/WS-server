@@ -5,7 +5,7 @@ from ra_dec_app import calculate_moon_coordinates
 
 
 async def handler(websocket):
-    print("A client just connected")
+    print("A client just connected!!!")
     try:
         while True:
             ra, dec = calculate_moon_coordinates()
