@@ -28,13 +28,15 @@ def run():
         sun_anomaly,
         moon_anomaly,
         dist_from_asc_node,
-        effect_by_sun)
+        effect_by_sun
+    )
 
     val2 = clc.calc_adds_to_eclp_lat(
         moon_mean_long,
         moon_anomaly,
         dist_from_asc_node,
-        a1, a3)
+        a1, a3
+    )
 
     sum_latitude = val1 + val2
 
@@ -45,11 +47,14 @@ def run():
         sun_anomaly,
         moon_anomaly,
         dist_from_asc_node,
-        effect_by_sun)
+        effect_by_sun
+    )
+
     val_2 = clc.calc_adds_to_eclp_long(
         moon_mean_long,
         dist_from_asc_node,
-        a1, a2)
+        a1, a2
+    )
 
     sum_longitude = val_1 + val_2
 
